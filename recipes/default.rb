@@ -26,6 +26,8 @@ php_pear_channel 'pear.php.net' do
   action :update
 end
 
+
+#TODO this really needs something like depsolver to be useful
 php_pear_channel 'pecl.php.net' do
   action :update
 end

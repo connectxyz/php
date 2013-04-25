@@ -59,7 +59,7 @@ if node['php']['use_git']
     (./configure #{node['php']['configure_options']})
     (make && make install)
     EOF
-    only_if { node['php']['build'] }
+    only_if { node['php']['build_php'] }
   end
 else
 

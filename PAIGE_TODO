@@ -1,0 +1,19 @@
+I made quite a few changes to this for various reasons... (curl and such)
+
+pkgs = value_for_platform(
+    ["centos","redhat","fedora", "scientific"] =>
+        {"default" => %w{ bzip2-devel libc-client-devel curl-devel freetype-devel gmp-devel libjpeg-devel krb5-devel libmcrypt-devel libpng-devel openssl-devel t1lib-devel mhash-devel }},
+    [ "debian", "ubuntu" ] =>
+        {"default" => %w{ libmemcached-dev libyaml-dev libyaml-0-2 libbz2-dev libc-client2007e-dev libcurl4-gnutls-dev libfreetype6-dev libgmp3-dev libjpeg62-dev libkrb5-dev libmcrypt-dev libpng12-dev libssl-dev libt1-dev libtool libev-dev re2c unzip openjdk-7-jdk }},
+    "default" => %w{ libmemcached-dev libyaml-dev libyaml-0-2 libbz2-dev libc-client2007e-dev libcurl4-gnutls-dev libfreetype6-dev libgmp3-dev libjpeg62-dev libkrb5-dev libmcrypt-dev libpng12-dev libssl-dev libt1-dev libev-dev re2c unzip openjdk-7-jdk }
+)
+
+php
+build
+false
+configure_options
+./configure --prefix=/usr --enable-mbstring --with-curl --with-openssl --with-xmlrpc --enable-soap --enable-zip --with-gd --with-jpeg-dir --with-png-dir --with-iconv-dir --with-mysql --enable-embedded-mysqli --with-freetype-dir --with-xsl --with-zlib --enable-cgi --with-pear --enable-bcmath --with-mysqli --enable-pcntl --with-mcrypt
+install_method
+cxyz
+source_branch
+PHP-5.4.10

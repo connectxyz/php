@@ -19,6 +19,10 @@
 # limitations under the License.
 #
 
+if node['php']['install_method'] == 'source'
+  Chef::Application.fatal!('memcache from source not implemented')
+end
+
 case node['platform_family']
 when "rhel", "fedora"
   %w{ zlib-devel }.each do |pkg|

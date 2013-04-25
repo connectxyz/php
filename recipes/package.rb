@@ -18,6 +18,10 @@
 # limitations under the License.
 #
 
+if node['php']['install_method'] == 'source'
+  Chef::Application.fatal!('please change install method to package if you really mean to use php5 packages instead of compiling from source')
+end
+
 node['php']['packages'].each do |pkg|
   package pkg do
     action :install

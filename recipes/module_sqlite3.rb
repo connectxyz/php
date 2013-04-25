@@ -19,6 +19,10 @@
 # limitations under the License.
 #
 
+if node['php']['install_method'] == 'source'
+  Chef::Application.fatal!('sqlite from source not implemented')
+end
+
 case node['platform_family']
 when "rhel", "fedora"
   #already there in centos, --with-pdo-sqlite=shared

@@ -49,18 +49,22 @@ bash "compile_libcouchbase" do
   cwd "#{Chef::Config[:file_cache_path]}/libcouchbase"
   code <<-EOF
     (config/autorun.sh)
-    (./configure --prefix=/usr/local/libcouchbase --disable-couchbasemock)
+    (./configure --prefix=#{node['php']['libcouchbase_prefix_dir']} --disable-couchbasemock)
     (make && make install)
   EOF
-  only_if { node['php']['build'] }
+  only_if { node['php']['build_libcouchbase'] }
 end
 
 bash "compile_php_couchbase_extension" do
   cwd "#{Chef::Config[:file_cache_path]}/phpcouchbase"
   code <<-EOF
     (/usr/local/php/bin/phpize)
-    (./configure CPPFLAGS='-I/usr/local/libcouchbase/include' LDFLAGS='-L/usr/local/libcouchbase/lib' --prefix=/usr/local/phpcouchbase --with-couchbase=/usr/local/libcouchbase --with-php-config=/usr/local/php/bin/php-config)
+    (./configure CPPFLAGS='-I#{node['php']['libcouchbase_prefix_dir']}/include' LDFLAGS='-L#{node['php']['libcouchbase_prefix_dir']}/lib' --with-couchbase=#{node['php']['libcouchbase_prefix_dir']} --with-php-config=#{node['php']['prefix_dir']}/bin/php-config)
     (make && make install)
   EOF
-  only_if { node['php']['build'] }
+  only_if { node['php']['build_couchbase_extension'] }
 end
+
+
+
+#TODO def manage_pecl_ini(name, action, directives, zend_extensions) I want to use the cookbooks built in provider to manage this extension once compiled/installed.
