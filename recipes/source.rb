@@ -30,7 +30,7 @@ pkgs = value_for_platform(
     [ "debian", "ubuntu" ] =>
         {"default" => %w{ libbz2-dev libc-client2007e-dev libcurl4-gnutls-dev libfreetype6-dev libgmp3-dev libjpeg62-dev libkrb5-dev libmcrypt-dev libpng12-dev libssl-dev libt1-dev }},
     "default" => %w{ libbz2-dev libc-client2007e-dev libcurl4-gnutls-dev libfreetype6-dev libgmp3-dev libjpeg62-dev libkrb5-dev libmcrypt-dev libpng12-dev libssl-dev libt1-dev }
-  )
+)
 
 pkgs.each do |pkg|
   package pkg do
@@ -40,21 +40,49 @@ end
 
 version = node['php']['version']
 
-remote_file "#{Chef::Config[:file_cache_path]}/php-#{version}.tar.gz" do
-  source "#{node['php']['url']}/php-#{version}.tar.gz"
-  checksum node['php']['checksum']
-  mode "0644"
-  not_if "which php"
-end
+if node['php']['use_git']
 
-bash "build php" do
-  cwd Chef::Config[:file_cache_path]
-  code <<-EOF
+  git "#{Chef::Config[:file_cache_path]}/php-src" do
+    repository node['php']['git_repository_url']
+    reference node['php']['git_source_branch']
+    action :sync
+  end
+
+  link "/usr/src/php" do
+    to "#{Chef::Config[:file_cache_path]}/php-src"
+  end
+
+  bash "build php" do
+    cwd "#{Chef::Config[:file_cache_path]}/php-src"
+    code <<-EOF
+    (./buildconf --force)
+    (./configure #{node['php']['configure_options']})
+    (make && make install)
+    EOF
+    only_if { node['php']['build'] }
+  end
+else
+
+  remote_file "#{Chef::Config[:file_cache_path]}/php-#{version}.tar.gz" do
+    source "#{node['php']['url']}/php-#{version}.tar.gz"
+    checksum node['php']['checksum']
+    mode "0644"
+    not_if "which php"
+  end
+
+  link "/usr/src/php" do
+    to "#{Chef::Config[:file_cache_path]}/php-#{version}"
+  end
+
+  bash "build php" do
+    cwd Chef::Config[:file_cache_path]
+    code <<-EOF
   tar -zxvf php-#{version}.tar.gz
   (cd php-#{version} && ./configure #{configure_options})
   (cd php-#{version} && make && make install)
-  EOF
-  not_if "which php"
+    EOF
+    not_if "which php"
+  end
 end
 
 directory node['php']['conf_dir'] do
