@@ -105,3 +105,15 @@ template "#{node['php']['conf_dir']}/php.ini" do
   group "root"
   mode "0644"
 end
+
+
+#TODO only if cgi service is to be enabled, also needs support for bluepill and init.d and bla bla bla
+
+include_recipe "runit"
+runit_service "php-fcgi"
+
+service "php-fcgi" do
+  supports :status => true, :restart => true, :reload => true
+  reload_command "#{node['runit']['sv_bin']} hup #{node['runit']['service_dir']}/php-fcgi"
+end
+
