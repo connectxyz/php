@@ -83,24 +83,6 @@ git "#{Chef::Config[:file_cache_path]}/libcouchbase" do
   action :sync
 end
 
-
-=begin
-
-
-###   git phpcouchbase is broken. This is a quick fix
-###   #include <libcouchbase/couchebase.h> needs to be changed to #include "libcouchbase/couchebase.h"
-ruby_block 'replace-internal-include' do
-  block do
-    text = File.read("#{Chef::Config[:file_cache_path]}/phpcouchbase/internal.h")
-    replace = text.gsub(/\<libcouchbase\/couchbase.h\>/, "\"libcouchbase\/couchbase.h\"")
-    File.open("#{Chef::Config[:file_cache_path]}/phpcouchbase/internal.h", "w") {|file| file.puts replace}
-  end
-end
-
-=end
-
-
-
 link "/usr/src/php" do
   to "#{Chef::Config[:file_cache_path]}/php-src"
 end
