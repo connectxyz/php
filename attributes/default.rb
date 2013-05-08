@@ -17,7 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-case node[:platform]
+case node["platform"]
 when "debian","ubuntu" # debian/ubuntu use lib for 32 and 64bit
     lib_dir = 'lib'
 else
