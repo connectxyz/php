@@ -17,6 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
 case node["platform"]
 when "debian","ubuntu" # debian/ubuntu use lib for 32 and 64bit
     lib_dir = 'lib'
@@ -66,7 +68,7 @@ default['php']['prefix_dir'] = '/usr/local'
 
 default['php']['libcouchbase_prefix_dir'] = '/usr/local'
 
-default['php']['configure_options'] = %W{--prefix=#{php['prefix_dir']}
+default['php']['configure_options'] = %W{ --prefix=#{php['prefix_dir']}
                                           --with-libdir=#{lib_dir}
                                           --with-config-file-path=#{php['conf_dir']}
                                           --with-config-file-scan-dir=#{php['ext_conf_dir']}
