@@ -99,8 +99,8 @@ bash "build php" do
   cwd "#{Chef::Config[:file_cache_path]}/php-src"
   code <<-EOF
     (./buildconf --force)
-#    (echo #{node['php']['configure_options'].join()} > php-configure_options.txt)
-    (./configure #{node['php']['configure_options'].join()})
+#    (echo #{node['php']['configure_options'].join(" ")} > php-configure_options.txt)
+    (./configure #{node['php']['configure_options'].join(" ")})
     (make && make install)
   EOF
   only_if { node['php']['build'] }
